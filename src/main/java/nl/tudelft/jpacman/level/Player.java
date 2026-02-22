@@ -37,7 +37,7 @@ public class Player extends Unit {
     /**
      * The maximum amount of lives a player can have.
      */
-    public static final int maxLives = 3;
+    public static final int MAX_LIVES = 3;
 
     /**
      * Number of lives remaining.
@@ -60,7 +60,7 @@ public class Player extends Unit {
     protected Player(Map<Direction, Sprite> spriteMap, AnimatedSprite deathAnimation) {
         this.score = 0;
         this.alive = true;
-        this.remainingLives = maxLives;
+        this.remainingLives = MAX_LIVES;
         this.sprites = spriteMap;
         this.deathSprite = deathAnimation;
         deathSprite.setAnimating(false);
