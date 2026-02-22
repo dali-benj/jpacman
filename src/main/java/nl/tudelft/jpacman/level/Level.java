@@ -187,7 +187,25 @@ public class Level {
                 List<Unit> occupants = destination.getOccupants();
                 unit.occupy(destination);
                 for (Unit occupant : occupants) {
-                    collisions.collide(unit, occupant);
+                    CollisionSignal collisionSignal = collisions.collide(unit, occupant);
+
+                    if (collisionSignal.equals(CollisionSignal.PLAYER_KILLED)) {
+                        stopNPCs();
+                        Player player;
+                        if (occupant instanceof Player) {
+                            player = (Player) occupant;
+                        } else {
+                            player = (Player) unit;
+                        }
+                        if (player.isAlive()) {
+                            player.occupy(player.getSpawnSquare());
+                            for (Ghost ghost: this.npcs.keySet()) {
+                                ghost.occupy(ghost.getSpawnSquare());
+                            }
+                        }
+                        startNPCs();
+                    }
+
                 }
             }
             updateObservers();

@@ -1,5 +1,6 @@
 package nl.tudelft.jpacman.level;
 
+import nl.tudelft.jpacman.board.Board;
 import nl.tudelft.jpacman.board.Unit;
 import nl.tudelft.jpacman.npc.Ghost;
 import nl.tudelft.jpacman.points.PointCalculator;
@@ -31,37 +32,41 @@ public class PlayerCollisions implements CollisionMap {
     }
 
     @Override
-    public void collide(Unit mover, Unit collidedOn) {
+    public CollisionSignal collide(Unit mover, Unit collidedOn) {
         if (mover instanceof Player) {
-            playerColliding((Player) mover, collidedOn);
+            return playerColliding((Player) mover, collidedOn);
         }
         else if (mover instanceof Ghost) {
-            ghostColliding((Ghost) mover, collidedOn);
+            return ghostColliding((Ghost) mover, collidedOn);
         }
         else if (mover instanceof Pellet) {
-            pelletColliding((Pellet) mover, collidedOn);
+            return pelletColliding((Pellet) mover, collidedOn);
         }
+        return CollisionSignal.NONE;
     }
 
-    private void playerColliding(Player player, Unit collidedOn) {
+    private CollisionSignal playerColliding(Player player, Unit collidedOn) {
         if (collidedOn instanceof Ghost) {
-            playerVersusGhost(player, (Ghost) collidedOn);
+            return playerVersusGhost(player, (Ghost) collidedOn);
         }
         if (collidedOn instanceof Pellet) {
-            playerVersusPellet(player, (Pellet) collidedOn);
+            return playerVersusPellet(player, (Pellet) collidedOn);
         }
+        return CollisionSignal.NONE;
     }
 
-    private void ghostColliding(Ghost ghost, Unit collidedOn) {
+    private CollisionSignal ghostColliding(Ghost ghost, Unit collidedOn) {
         if (collidedOn instanceof Player) {
-            playerVersusGhost((Player) collidedOn, ghost);
+            return playerVersusGhost((Player) collidedOn, ghost);
         }
+        return CollisionSignal.NONE;
     }
 
-    private void pelletColliding(Pellet pellet, Unit collidedOn) {
+    private CollisionSignal pelletColliding(Pellet pellet, Unit collidedOn) {
         if (collidedOn instanceof Player) {
-            playerVersusPellet((Player) collidedOn, pellet);
+            return playerVersusPellet((Player) collidedOn, pellet);
         }
+        return CollisionSignal.NONE;
     }
 
 
@@ -73,10 +78,11 @@ public class PlayerCollisions implements CollisionMap {
      * @param ghost
      *          The ghost involved in the collision.
      */
-    public void playerVersusGhost(Player player, Ghost ghost) {
+    public CollisionSignal playerVersusGhost(Player player, Ghost ghost) {
         pointCalculator.collidedWithAGhost(player, ghost);
-        player.setAlive(false);
+        player.kill();
         player.setKiller(ghost);
+        return CollisionSignal.PLAYER_KILLED;
     }
 
     /**
@@ -87,9 +93,10 @@ public class PlayerCollisions implements CollisionMap {
      * @param pellet
      *           The pellet involved in the collision.
      */
-    public void playerVersusPellet(Player player, Pellet pellet) {
+    public CollisionSignal playerVersusPellet(Player player, Pellet pellet) {
         pointCalculator.consumedAPellet(player, pellet);
         pellet.leaveSquare();
+        return CollisionSignal.PELLET_CONSUMED;
     }
 
 }

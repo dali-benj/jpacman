@@ -113,25 +113,25 @@ public class CollisionInteractionMap implements CollisionMap {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <C1 extends Unit, C2 extends Unit> void collide(C1 collider,
+    public <C1 extends Unit, C2 extends Unit> CollisionSignal collide(C1 collider,
                                                            C2 collidee) {
         Class<? extends Unit> colliderKey = getMostSpecificClass(handlers, collider.getClass());
         if (colliderKey == null) {
-            return;
+            return CollisionSignal.NONE;
         }
 
         Map<Class<? extends Unit>, CollisionHandler<?, ?>> map = handlers.get(colliderKey);
         Class<? extends Unit> collideeKey = getMostSpecificClass(map, collidee.getClass());
         if (collideeKey == null) {
-            return;
+            return CollisionSignal.NONE;
         }
 
         CollisionHandler<C1, C2> collisionHandler = (CollisionHandler<C1, C2>) map.get(collideeKey);
         if (collisionHandler == null) {
-            return;
+            return CollisionSignal.NONE;
         }
 
-        collisionHandler.handleCollision(collider, collidee);
+        return collisionHandler.handleCollision(collider, collidee);
     }
 
     /**
@@ -207,7 +207,7 @@ public class CollisionInteractionMap implements CollisionMap {
          * @param collidee
          *            The collidee.
          */
-        void handleCollision(C1 collider, C2 collidee);
+        CollisionSignal handleCollision(C1 collider, C2 collidee);
     }
 
     /**
@@ -243,8 +243,8 @@ public class CollisionInteractionMap implements CollisionMap {
          * it compatible with the initial collision.
          */
         @Override
-        public void handleCollision(C1 collider, C2 collidee) {
-            handler.handleCollision(collidee, collider);
+        public CollisionSignal handleCollision(C1 collider, C2 collidee) {
+            return handler.handleCollision(collidee, collider);
         }
     }
 

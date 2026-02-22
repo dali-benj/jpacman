@@ -33,8 +33,8 @@ public class DefaultPlayerInteractionMap implements CollisionMap {
     }
 
     @Override
-    public void collide(Unit mover, Unit movedInto) {
-        collisions.collide(mover, movedInto);
+    public CollisionSignal collide(Unit mover, Unit movedInto) {
+        return collisions.collide(mover, movedInto);
     }
 
     /**
@@ -49,14 +49,16 @@ public class DefaultPlayerInteractionMap implements CollisionMap {
         collisionMap.onCollision(Player.class, Ghost.class,
             (player, ghost) -> {
                 pointCalculator.collidedWithAGhost(player, ghost);
-                player.setAlive(false);
+                player.kill();
                 player.setKiller(ghost);
+                return CollisionSignal.PLAYER_KILLED;
             });
 
         collisionMap.onCollision(Player.class, Pellet.class,
             (player, pellet) -> {
                 pointCalculator.consumedAPellet(player, pellet);
                 pellet.leaveSquare();
+                return CollisionSignal.PELLET_CONSUMED;
             });
         return collisionMap;
     }

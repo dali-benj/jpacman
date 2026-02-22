@@ -15,6 +15,11 @@ public abstract class Unit {
     private Square square;
 
     /**
+     * The first square this unit was placed on.
+     */
+    private Square spawnSquare;
+
+    /**
      * The direction this unit is facing.
      */
     private Direction direction;
@@ -54,6 +59,11 @@ public abstract class Unit {
         return square;
     }
 
+    public Square getSpawnSquare() {
+        assert spawnSquare != null;
+        return spawnSquare;
+    }
+
     /**
      * Returns whether this unit is currently on  a square.
      *
@@ -75,6 +85,9 @@ public abstract class Unit {
 
         if (square != null) {
             square.remove(this);
+        }
+        else {
+            spawnSquare = target;
         }
         square = target;
         target.put(this);

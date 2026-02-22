@@ -35,6 +35,16 @@ public class Player extends Unit {
     private boolean alive;
 
     /**
+     * The maximum amount of lives a player can have.
+     */
+    public static final int maxLives = 3;
+
+    /**
+     * Number of lives remaining.
+     */
+    private int remainingLives;
+
+    /**
      * {@link Unit} iff this player died by collision, <code>null</code> otherwise.
      */
     private Unit killer;
@@ -50,9 +60,19 @@ public class Player extends Unit {
     protected Player(Map<Direction, Sprite> spriteMap, AnimatedSprite deathAnimation) {
         this.score = 0;
         this.alive = true;
+        this.remainingLives = maxLives;
         this.sprites = spriteMap;
         this.deathSprite = deathAnimation;
         deathSprite.setAnimating(false);
+    }
+
+    /**
+     * Returns the amount of lives remaining for this player.
+     *
+     * @return <code>int</code> The amount of lives remaining.
+     */
+    public int getRemainingLives() {
+        return remainingLives;
     }
 
     /**
@@ -66,8 +86,7 @@ public class Player extends Unit {
 
     /**
      * Sets whether this player is alive or not.
-     *
-     * If the player comes back alive, the {@link killer} will be reset.
+     * If the player comes back alive, the {@link #killer} will be reset.
      *
      * @param isAlive
      *            <code>true</code> iff this player is alive.
@@ -128,4 +147,16 @@ public class Player extends Unit {
     public void addPoints(int points) {
         score += points;
     }
+
+    /**
+     * Kills this player, reducing the amount of lives by one and setting the
+     * player to not alive if there are no lives left.
+     */
+    public void kill() {
+        this.remainingLives--;
+        if (this.remainingLives <= 0) {
+            setAlive(false);
+        }
+    }
+
 }

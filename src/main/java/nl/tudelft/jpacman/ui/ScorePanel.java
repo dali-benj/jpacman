@@ -74,6 +74,7 @@ public class ScorePanel extends JPanel {
                 score = "You died. ";
             }
             score += scoreFormatter.format(player);
+            score += " Lives: " + player.getRemainingLives();
             entry.getValue().setText(score);
         }
     }
