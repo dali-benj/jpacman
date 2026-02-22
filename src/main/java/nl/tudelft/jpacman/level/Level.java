@@ -215,9 +215,9 @@ public class Level {
         stopNPCs();
         Player player = occupant instanceof Player ? (Player) occupant : (Player) movingUnit;
         if (player.isAlive()) {
-            player.occupy(player.getSpawnSquare());
+            player.respawn();
             for (Ghost ghost : npcs.keySet()) {
-                ghost.occupy(ghost.getSpawnSquare());
+                ghost.respawn();
             }
         }
         startNPCs();

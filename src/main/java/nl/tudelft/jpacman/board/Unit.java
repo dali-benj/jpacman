@@ -139,4 +139,11 @@ public abstract class Unit {
 
         return destination;
     }
+
+    /**
+     * Moves unit back to its spawn, if it has one.
+     */
+    public void respawn() {
+        occupy(this.getSpawnSquare());
+    }
 }

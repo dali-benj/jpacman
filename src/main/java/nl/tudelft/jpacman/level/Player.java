@@ -3,6 +3,7 @@ package nl.tudelft.jpacman.level;
 import java.util.Map;
 
 import nl.tudelft.jpacman.board.Direction;
+import nl.tudelft.jpacman.board.Square;
 import nl.tudelft.jpacman.board.Unit;
 import nl.tudelft.jpacman.sprite.AnimatedSprite;
 import nl.tudelft.jpacman.sprite.Sprite;
@@ -81,25 +82,7 @@ public class Player extends Unit {
      * @return <code>true</code> iff the player is alive.
      */
     public boolean isAlive() {
-        return alive;
-    }
-
-    /**
-     * Sets whether this player is alive or not.
-     * If the player comes back alive, the {@link #killer} will be reset.
-     *
-     * @param isAlive
-     *            <code>true</code> iff this player is alive.
-     */
-    public void setAlive(boolean isAlive) {
-        if (isAlive) {
-            deathSprite.setAnimating(false);
-            this.killer = null;
-        }
-        if (!isAlive) {
-            deathSprite.restart();
-        }
-        this.alive = isAlive;
+        return remainingLives > 0;
     }
 
     /**
@@ -149,13 +132,11 @@ public class Player extends Unit {
     }
 
     /**
-     * Kills this player, reducing the amount of lives by one and setting the
-     * player to not alive if there are no lives left.
+     * Kills this player, reducing the amount of lives by one.
      */
     public void kill() {
-        this.remainingLives--;
-        if (this.remainingLives <= 0) {
-            setAlive(false);
+        if (this.isAlive()) {
+            this.remainingLives--;
         }
     }
 
