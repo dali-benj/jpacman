@@ -135,8 +135,13 @@ public class Player extends Unit {
      * Kills this player, reducing the amount of lives by one.
      */
     public void kill() {
+        this.remainingLives--;
         if (this.isAlive()) {
-            this.remainingLives--;
+            deathSprite.setAnimating(false);
+            this.killer = null;
+        }
+        else {
+            deathSprite.restart();
         }
     }
 
