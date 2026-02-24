@@ -52,7 +52,7 @@ public class LauncherSmokeTest {
      *
      * @throws InterruptedException Since we're sleeping in this test.
      */
-    @SuppressWarnings({"magicnumber", "methodlength", "PMD.JUnitTestContainsTooManyAsserts"})
+    @SuppressWarnings({ "magicnumber", "methodlength", "PMD.JUnitTestContainsTooManyAsserts" })
     @Test
     void smokeTest() throws InterruptedException {
         Game game = launcher.getGame();
@@ -93,7 +93,10 @@ public class LauncherSmokeTest {
         // we're close to monsters, this will get us killed.
         move(game, Direction.WEST, 10);
         move(game, Direction.EAST, 10);
-        assertThat(player.isAlive()).isFalse();
+
+        // The player should have lost one life but still be alive since MAX_LIVES = 3
+        assertThat(player.isAlive()).isTrue();
+        assertThat(player.getRemainingLives()).isEqualTo(Player.MAX_LIVES - 1);
 
         game.stop();
         assertThat(game.isInProgress()).isFalse();
@@ -102,8 +105,8 @@ public class LauncherSmokeTest {
     /**
      * Make number of moves in given direction.
      *
-     * @param game The game we're playing
-     * @param dir The direction to be taken
+     * @param game     The game we're playing
+     * @param dir      The direction to be taken
      * @param numSteps The number of steps to take
      */
     public static void move(Game game, Direction dir, int numSteps) {

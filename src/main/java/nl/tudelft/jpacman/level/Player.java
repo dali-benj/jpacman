@@ -30,9 +30,14 @@ public class Player extends Unit {
     private final AnimatedSprite deathSprite;
 
     /**
-     * <code>true</code> iff this player is alive.
+     * The maximum amount of lives a player can have.
      */
-    private boolean alive;
+    public static final int MAX_LIVES = 3;
+
+    /**
+     * Number of lives remaining.
+     */
+    private int remainingLives;
 
     /**
      * {@link Unit} iff this player died by collision, <code>null</code> otherwise.
@@ -50,10 +55,19 @@ public class Player extends Unit {
      */
     protected Player(Map<Direction, Sprite> spriteMap, AnimatedSprite deathAnimation) {
         this.score = 0;
-        this.alive = true;
+        this.remainingLives = MAX_LIVES;
         this.sprites = spriteMap;
         this.deathSprite = deathAnimation;
         deathSprite.setAnimating(false);
+    }
+
+    /**
+     * Returns the amount of lives remaining for this player.
+     *
+     * @return <code>int</code> The amount of lives remaining.
+     */
+    public int getRemainingLives() {
+        return remainingLives;
     }
 
     /**
@@ -62,26 +76,7 @@ public class Player extends Unit {
      * @return <code>true</code> iff the player is alive.
      */
     public boolean isAlive() {
-        return alive;
-    }
-
-    /**
-     * Sets whether this player is alive or not.
-     *
-     * If the player comes back alive, the {@link killer} will be reset.
-     *
-     * @param isAlive
-     *                <code>true</code> iff this player is alive.
-     */
-    public void setAlive(boolean isAlive) {
-        if (isAlive) {
-            deathSprite.setAnimating(false);
-            this.killer = null;
-        }
-        if (!isAlive) {
-            deathSprite.restart();
-        }
-        this.alive = isAlive;
+        return remainingLives > 0;
     }
 
     /**
@@ -90,7 +85,7 @@ public class Player extends Unit {
      * @param killer The unit that caused the player to die.
      */
     public void kill(Unit killer) {
-        this.setAlive(false);
+        this.kill();
         this.setKiller(killer);
     }
 
@@ -140,4 +135,18 @@ public class Player extends Unit {
     public void addPoints(int points) {
         score += points;
     }
+
+    /**
+     * Kills this player, reducing the amount of lives by one.
+     */
+    public void kill() {
+        this.remainingLives--;
+        if (this.isAlive()) {
+            deathSprite.setAnimating(false);
+            this.killer = null;
+        } else {
+            deathSprite.restart();
+        }
+    }
+
 }

@@ -24,7 +24,9 @@ public interface CollisionMap {
      *            another unit already on it.
      * @param collidee
      *            The unit that is already on the square that is being invaded.
+     *
+     * @return The signal resulting from the collision.
      */
-    <C1 extends Unit, C2 extends Unit> void collide(C1 collider, C2 collidee);
+    <C1 extends Unit, C2 extends Unit> CollisionSignal collide(C1 collider, C2 collidee);
 
 }
