@@ -6,6 +6,7 @@ import nl.tudelft.jpacman.board.Direction;
 import nl.tudelft.jpacman.board.Unit;
 import nl.tudelft.jpacman.sprite.AnimatedSprite;
 import nl.tudelft.jpacman.sprite.Sprite;
+import nl.tudelft.jpacman.ui.ScorePanel;
 
 /**
  * A player operated unit in our game.
@@ -147,6 +148,22 @@ public class Player extends Unit {
         } else {
             deathSprite.restart();
         }
+    }
+
+    /**
+     * Builds the display text for this player.
+     *
+     * @param formatter The formatter used to format the score.
+     * @return The display text for this player.
+     */
+    public String getDisplayText(ScorePanel.ScoreFormatter formatter) {
+        String score = "";
+        if (!isAlive()) {
+            score = "You died. ";
+        }
+        score += formatter.format(this);
+        score += "  Lives: " + remainingLives;
+        return score;
     }
 
 }
